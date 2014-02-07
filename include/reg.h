@@ -48,9 +48,7 @@
                 void (*write) (struct _cerebellum_reg_struct_##name *); %\
         }; %\
         typedef struct _cerebellum_reg_struct_##name *creg_##name; %\
-        typedef void (*creg_handler_##name) (creg_##name); %\
-        base_type## creg_##name##_read(creg_##name reg); %\
-        void creg_##name##_write(creg_##name reg, ##base_type value)
+        typedef void (*creg_handler_##name) (creg_##name)
 
 */
 
@@ -137,6 +135,17 @@ struct _cerebellum_reg_struct_s64 {
 typedef struct _cerebellum_reg_struct_s64 *creg_s64; 
 typedef void (*creg_handler_s64) (creg_s64);
 
+/**
+ * Float register types
+ */
+
+struct _cerebellum_reg_struct_float {
+        float data; 
+        void (*read) (struct _cerebellum_reg_struct_u64 *); 
+        void (*write) (struct _cerebellum_reg_struct_u64 *); 
+}; 
+typedef struct _cerebellum_reg_struct_float *creg_float; 
+typedef void (*creg_handler_float) (creg_float);
 
 /**
  * String register type
