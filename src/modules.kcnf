@@ -1,0 +1,8 @@
+comment "Cerebellum modules"
+
+menuconfig CONTRIB_CEREBELLUM_MOD_LED
+        bool "On-board LEDs"
+
+if CONTRIB_CEREBELLUM_MOD_LED
+        source antares/src/lib/contrib/cerebellum/led/kcnf
+endif

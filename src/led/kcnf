@@ -1,0 +1,171 @@
+if CONTRIB_CEREBELLUM_BOARD_CUSTOM
+
+choice
+        prompt "Onboard LEDs"
+
+        config CONTRIB_CEREBELLUM_MOD_LED_1
+                bool "1"
+
+        config CONTRIB_CEREBELLUM_MOD_LED_2
+                bool "2"
+
+        config CONTRIB_CEREBELLUM_MOD_LED_3
+                bool "3"
+
+        config CONTRIB_CEREBELLUM_MOD_LED_4
+                bool "4"
+endchoice
+
+if CONTRIB_CEREBELLUM_MOD_LED_1 || CONTRIB_CEREBELLUM_MOD_LED_2 || CONTRIB_CEREBELLUM_MOD_LED_3 || CONTRIB_CEREBELLUM_MOD_LED_4
+        menu "LED1 configuration"
+                        choice
+                                prompt "GPIO letter"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_1_GPIO_A
+                                        bool "A"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_1_GPIO_B
+                                        bool "B"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_1_GPIO_C
+                                        bool "C"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_1_GPIO_D
+                                        bool "D"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_1_GPIO_E
+                                        bool "E"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_1_GPIO_F
+                                        bool "F"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_1_GPIO_G
+                                        bool "G"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_1_GPIO_H
+                                        bool "H"
+                        endchoice
+
+                        config CONTRIB_CEREBELLUM_MOD_LED_PN_1
+                                int "GPIO pin"
+                                range 0 7 if ARCH_AVR
+                                range 0 15 if ARCH_ARM
+        endmenu
+endif
+
+if CONTRIB_CEREBELLUM_MOD_LED_2 || CONTRIB_CEREBELLUM_MOD_LED_3 || CONTRIB_CEREBELLUM_MOD_LED_4
+        menu "LED2 configuration"
+                        choice
+                                prompt "GPIO letter"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_2_GPIO_A
+                                        bool "A"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_2_GPIO_B
+                                        bool "B"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_2_GPIO_C
+                                        bool "C"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_2_GPIO_D
+                                        bool "D"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_2_GPIO_E
+                                        bool "E"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_2_GPIO_F
+                                        bool "F"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_2_GPIO_G
+                                        bool "G"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_2_GPIO_H
+                                        bool "H"
+                        endchoice
+
+                        config CONTRIB_CEREBELLUM_MOD_LED_PN_2
+                                int "GPIO pin"
+                                range 0 7 if ARCH_AVR
+                                range 0 15 if ARCH_ARM
+        endmenu
+endif
+
+if CONTRIB_CEREBELLUM_MOD_LED_3 || CONTRIB_CEREBELLUM_MOD_LED_4
+        menu "LED3 configuration"
+                        choice
+                                prompt "GPIO letter"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_3_GPIO_A
+                                        bool "A"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_3_GPIO_B
+                                        bool "B"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_3_GPIO_C
+                                        bool "C"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_3_GPIO_D
+                                        bool "D"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_3_GPIO_E
+                                        bool "E"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_3_GPIO_F
+                                        bool "F"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_3_GPIO_G
+                                        bool "G"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_3_GPIO_H
+                                        bool "H"
+                        endchoice
+
+                        config CONTRIB_CEREBELLUM_MOD_LED_PN_3
+                                int "GPIO pin"
+                                range 0 7 if ARCH_AVR
+                                range 0 15 if ARCH_ARM
+        endmenu
+endif
+
+if CONTRIB_CEREBELLUM_MOD_LED_4
+        menu "LED4 configuration"
+                        choice
+                                prompt "GPIO letter"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_4_GPIO_A
+                                        bool "A"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_4_GPIO_B
+                                        bool "B"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_4_GPIO_C
+                                        bool "C"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_4_GPIO_D
+                                        bool "D"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_4_GPIO_E
+                                        bool "E"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_4_GPIO_F
+                                        bool "F"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_4_GPIO_G
+                                        bool "G"
+
+                                config CONTRIB_CEREBELLUM_MOD_LED_4_GPIO_H
+                                        bool "H"
+                        endchoice
+
+                        config CONTRIB_CEREBELLUM_MOD_LED_PN_4
+                                int "GPIO pin"
+                                range 0 7 if ARCH_AVR
+                                range 0 15 if ARCH_ARM
+        endmenu
+endif
+
+endif
+
+if !CONTRIB_CEREBELLUM_BOARD_CUSTOM
+        comment "Nothing to configure. Everything is ready for your board"
+endif

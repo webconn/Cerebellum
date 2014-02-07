@@ -1,0 +1,10 @@
+menuconfig CONTRIB_CEREBELLUM
+        bool "Cerebellum robotics library"
+        depends on ARCH_AVR || ARCH_ARM
+
+if CONTRIB_CEREBELLUM
+
+source antares/src/lib/contrib/cerebellum/boards.kcnf
+source antares/src/lib/contrib/cerebellum/modules.kcnf
+
+endif

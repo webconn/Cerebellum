@@ -1,0 +1,10 @@
+choice
+        prompt "Development board"
+
+        config CONTRIB_CEREBELLUM_BOARD_CEREMOTOR_F1
+                bool "CereMotor-F1"
+
+        config CONTRIB_CEREBELLUM_BOARD_STEPPER_U4
+                bool "Stepper-U4"
+
+endchoice
