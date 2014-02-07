@@ -34,8 +34,10 @@
  * To decrease memory size, there are macroses to read and write registers;
  * also, if you need, you can compile set of functions to access registers.
  */
-#define CREG_READ(reg, var) do { var = reg->data; if (reg->read) reg->read(reg); } while (0)
+#define CREG_READ(reg, var) do { if (reg->read) reg->read(reg); var = reg->data; } while (0)
 #define CREG_WRITE(reg, value) do { reg->data = value; if (reg->write) reg->write(reg); } while (0)
+#define CREG_SET_BITS(reg, bits) do { if (reg->read) reg->read(reg); reg->data |= bits; if (reg->write) reg->write(reg); } while (0)
+#define CREG_RESET_BITS(reg, bits) do { if (reg->read) reg->read(reg); reg->data &= ~bits; if (reg->write) reg->write(reg); } while (0)
 
 #include <stdint.h>
 

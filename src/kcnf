@@ -4,7 +4,12 @@ menuconfig CONTRIB_CEREBELLUM
 
 if CONTRIB_CEREBELLUM
 
+config CONTRIB_CEREBELLUM_DEBUG
+        bool "Enable debugging output (by printk)"
+        default y
+
 source antares/src/lib/contrib/cerebellum/boards.kcnf
 source antares/src/lib/contrib/cerebellum/modules.kcnf
+
 
 endif

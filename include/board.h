@@ -6,9 +6,9 @@
  */
 
 #if defined(CONFIG_CONTRIB_CEREBELLUM_BOARD_CEREMOTOR_F1)
-        #include <lib/cerebellum/boards/ceremotor_f1.h>
+        #include <lib/cerebellum/boards/ceremotor_v2.h>
 #elif defined(CONFIG_CONTRIB_CEREBELLUM_BOARD_STEPPER_U4)
-        #include <lib/cerebellum/boards/stepper_u4.h>
+        #include <lib/cerebellum/boards/cerestepper_u4.h>
 #endif
 
 #endif
