@@ -1,0 +1,6 @@
+# Legacy directories and files - need only for working, but not for publishing
+
+*-legacy
+
+# Temp files of Vim
+.*.swp
