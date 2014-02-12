@@ -1,1 +1,2 @@
 subdirs-$(CONFIG_CONTRIB_CEREBELLUM_MOD_LED)+=led
+subdirs-y+=arch
