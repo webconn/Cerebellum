@@ -1,5 +1,5 @@
-#ifndef ANTARES_LIB_CONTRIB_CEREBELLUM_IO_H
-#define ANTARES_LIB_CONTRIB_CEREBELLUM_IO_H
+#ifndef ANTARES_LIB_CONTRIB_CEREBELLUM_REG_H
+#define ANTARES_LIB_CONTRIB_CEREBELLUM_REG_H
 
 /**
  * Cerebellum I/O system structures and functions
@@ -26,6 +26,7 @@
  *      3. 32-bit register;
  *      4. 64-bit register;
  *      5. String register (with char * type of data)
+ *      6. Float register
  *
  * For each size, there are signed and unsigned variants.
  */
@@ -44,12 +45,12 @@
 /* For generation purposes only; C preprocessor don't do it the right way
 
 #define CEREBELLUM_REGISTER_TYPEDEF(base_type, name) \
-        struct _cerebellum_reg_struct_##name {  %\
+        struct creg_struct_##name {  %\
                 base_type## data; %\
-                void (*read) (struct _cerebellum_reg_struct_##name *); %\
-                void (*write) (struct _cerebellum_reg_struct_##name *); %\
+                void (*read) (struct creg_struct_##name *); %\
+                void (*write) (struct creg_struct_##name *); %\
         }; %\
-        typedef struct _cerebellum_reg_struct_##name *creg_##name; %\
+        typedef struct creg_struct_##name *creg_##name; %\
         typedef void (*creg_handler_##name) (creg_##name)
 
 */
@@ -59,40 +60,56 @@
  * 8-bit registers types
  */
 
-struct _cerebellum_reg_struct_u8 { 
+struct creg_struct_u8 { 
         uint8_t data; 
-        void (*read) (struct _cerebellum_reg_struct_u8 *); 
-        void (*write) (struct _cerebellum_reg_struct_u8 *); 
+        void (*read) (struct creg_struct_u8 *); 
+        void (*write) (struct creg_struct_u8 *); 
+	union {
+		void *config_p;
+		unsigned int config;
+	};
 }; 
-typedef struct _cerebellum_reg_struct_u8 *creg_u8; 
+typedef struct creg_struct_u8 *creg_u8, creg_u8_struct; 
 typedef void (*creg_handler_u8) (creg_u8);
 
-struct _cerebellum_reg_struct_s8 { 
+struct creg_struct_s8 { 
         int8_t data; 
-        void (*read) (struct _cerebellum_reg_struct_s8 *); 
-        void (*write) (struct _cerebellum_reg_struct_s8 *); 
+        void (*read) (struct creg_struct_s8 *); 
+        void (*write) (struct creg_struct_s8 *); 
+	union {
+		void *config_p;
+		unsigned int config;
+	};
 }; 
-typedef struct _cerebellum_reg_struct_s8 *creg_s8; 
+typedef struct creg_struct_s8 *creg_s8, creg_s8_struct; 
 typedef void (*creg_handler_s8) (creg_s8);
 
 /**
  * 16-bit register types
  */
 
-struct _cerebellum_reg_struct_u16 { 
+struct creg_struct_u16 { 
         uint16_t data; 
-        void (*read) (struct _cerebellum_reg_struct_u16 *); 
-        void (*write) (struct _cerebellum_reg_struct_u16 *); 
+        void (*read) (struct creg_struct_u16 *); 
+        void (*write) (struct creg_struct_u16 *); 
+	union {
+		void *config_p;
+		unsigned int config;
+	};
 }; 
-typedef struct _cerebellum_reg_struct_u16 *creg_u16; 
+typedef struct creg_struct_u16 *creg_u16, creg_u16_struct; 
 typedef void (*creg_handler_u16) (creg_u16);
 
-struct _cerebellum_reg_struct_s16 { 
+struct creg_struct_s16 { 
         int16_t data; 
-        void (*read) (struct _cerebellum_reg_struct_s16 *); 
-        void (*write) (struct _cerebellum_reg_struct_s16 *); 
+        void (*read) (struct creg_struct_s16 *); 
+        void (*write) (struct creg_struct_s16 *); 
+	union {
+		void *config_p;
+		unsigned int config;
+	};
 }; 
-typedef struct _cerebellum_reg_struct_s16 *creg_s16; 
+typedef struct creg_struct_s16 *creg_s16, creg_s16_struct; 
 typedef void (*creg_handler_s16) (creg_s16);
 
 
@@ -100,20 +117,28 @@ typedef void (*creg_handler_s16) (creg_s16);
  * 32-bit register types
  */
 
-struct _cerebellum_reg_struct_u32 { 
+struct creg_struct_u32 { 
         uint32_t data; 
-        void (*read) (struct _cerebellum_reg_struct_u32 *); 
-        void (*write) (struct _cerebellum_reg_struct_u32 *); 
+        void (*read) (struct creg_struct_u32 *); 
+        void (*write) (struct creg_struct_u32 *); 
+	union {
+		void *config_p;
+		unsigned int config;
+	};
 }; 
-typedef struct _cerebellum_reg_struct_u32 *creg_u32; 
+typedef struct creg_struct_u32 *creg_u32, creg_u32_struct; 
 typedef void (*creg_handler_u32) (creg_u32);
 
-struct _cerebellum_reg_struct_s32 { 
+struct creg_struct_s32 { 
         int32_t data; 
-        void (*read) (struct _cerebellum_reg_struct_s32 *); 
-        void (*write) (struct _cerebellum_reg_struct_s32 *); 
+        void (*read) (struct creg_struct_s32 *); 
+        void (*write) (struct creg_struct_s32 *); 
+	union {
+		void *config_p;
+		unsigned int config;
+	};
 }; 
-typedef struct _cerebellum_reg_struct_s32 *creg_s32; 
+typedef struct creg_struct_s32 *creg_s32, creg_s32_struct; 
 typedef void (*creg_handler_s32) (creg_s32);
 
 
@@ -121,44 +146,60 @@ typedef void (*creg_handler_s32) (creg_s32);
  * 64-bit register types
  */
 
-struct _cerebellum_reg_struct_u64 {
+struct creg_struct_u64 {
         uint64_t data; 
-        void (*read) (struct _cerebellum_reg_struct_u64 *); 
-        void (*write) (struct _cerebellum_reg_struct_u64 *); 
+        void (*read) (struct creg_struct_u64 *); 
+        void (*write) (struct creg_struct_u64 *); 
+	union {
+		void *config_p;
+		unsigned int config;
+	};
 }; 
-typedef struct _cerebellum_reg_struct_u64 *creg_u64; 
+typedef struct creg_struct_u64 *creg_u64, creg_u64_struct; 
 typedef void (*creg_handler_u64) (creg_u64);
 
-struct _cerebellum_reg_struct_s64 { 
+struct creg_struct_s64 { 
         int64_t data; 
-        void (*read) (struct _cerebellum_reg_struct_s64 *); 
-        void (*write) (struct _cerebellum_reg_struct_s64 *); 
+        void (*read) (struct creg_struct_s64 *); 
+        void (*write) (struct creg_struct_s64 *); 
+	union {
+		void *config_p;
+		unsigned int config;
+	};
 }; 
-typedef struct _cerebellum_reg_struct_s64 *creg_s64; 
+typedef struct creg_struct_s64 *creg_s64, creg_s64_struct; 
 typedef void (*creg_handler_s64) (creg_s64);
 
 /**
  * Float register types
  */
 
-struct _cerebellum_reg_struct_float {
+struct creg_struct_float {
         float data; 
-        void (*read) (struct _cerebellum_reg_struct_u64 *); 
-        void (*write) (struct _cerebellum_reg_struct_u64 *); 
+        void (*read) (struct creg_struct_u64 *); 
+        void (*write) (struct creg_struct_u64 *); 
+	union {
+		void *config_p;
+		unsigned int config;
+	};
 }; 
-typedef struct _cerebellum_reg_struct_float *creg_float; 
+typedef struct creg_struct_float *creg_float, creg_float_struct; 
 typedef void (*creg_handler_float) (creg_float);
 
 /**
  * String register type
  */
 
-struct _cerebellum_reg_struct_str { 
+struct creg_struct_str { 
         char *data; 
-        void (*read) (struct _cerebellum_reg_struct_str *); 
-        void (*write) (struct _cerebellum_reg_struct_str *); 
+        void (*read) (struct creg_struct_str *); 
+        void (*write) (struct creg_struct_str *); 
+	union {
+	        void *config_p;
+		unsigned int config;
+	};
 }; 
-typedef struct _cerebellum_reg_struct_str *creg_str; 
+typedef struct creg_struct_str *creg_str, creg_str_struct; 
 typedef void (*creg_handler_str) (creg_str);
 
 #endif

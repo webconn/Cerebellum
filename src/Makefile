@@ -1,2 +1,2 @@
-subdirs-$(CONFIG_CONTRIB_CEREBELLUM_MOD_LED)+=led
-subdirs-y+=arch
+subdirs-$(CONFIG_LIB_CEREBELLUM_MOD_LED)+=led
+subdirs-$(CONFIG_LIB_CEREBELLUM_MOD_STEPPER)+=stepper

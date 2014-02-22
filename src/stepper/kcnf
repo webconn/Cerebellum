@@ -1,0 +1,114 @@
+if CONTRIB_CEREBELLUM_BOARD_CUSTOM
+
+config LIB_CEREBELLUM_STEPPER_NUM
+        int "Number of Stepper channels"
+        range 1 3
+        default 2
+
+config LIB_CEREBELLUM_STEPPER_ENABLE
+        string "ENABLE pin"
+
+config LIB_CEREBELLUM_STEPPER_ENABLE_INV
+        bool "Invert ENABLE levels"
+        help
+                By default, ENABLE pin has 0 as active value. (synonym for E-STOP).
+                Select this option to set 1 as active value for pin.
+
+if (LIB_CEREBELLUM_STEPPER_NUM = 1 || LIB_CEREBELLUM_STEPPER_NUM = 2 || LIB_CEREBELLUM_STEPPER_NUM = 3)
+        menu "Channel 1 configuration"
+                comment "All pins describe as GPxy (x - port letter, y-pin number)"
+                comment "Example: for PB2 write GPB2"
+
+                config LIB_CEREBELLUM_STEPPER_STEP_1
+                        string "STEP pin"
+
+                config LIB_CEREBELLUM_STEPPER_DIR_1
+                        string "DIR pin"
+
+                config LIB_CEREBELLUM_STEPPER_RESOL_1
+                        int "Resolution"
+
+                config LIB_CEREBELLUM_STEPPER_DIAMETER_1
+                        int "Wheel diameter"
+        endmenu
+endif
+
+if (LIB_CEREBELLUM_STEPPER_NUM = 2 || LIB_CEREBELLUM_STEPPER_NUM = 3)
+        menu "Channel 2 configuration"
+                comment "All pins describe as GPxy (x - port letter, y-pin number)"
+                comment "Example: for PB2 write GPB2"
+
+                config LIB_CEREBELLUM_STEPPER_STEP_2
+                        string "STEP pin"
+
+                config LIB_CEREBELLUM_STEPPER_DIR_2
+                        string "DIR pin"
+
+                config LIB_CEREBELLUM_STEPPER_RESOL_2
+                        int "Resolution"
+
+                config LIB_CEREBELLUM_STEPPER_DIAMETER_2
+                        int "Wheel diameter"
+
+        endmenu
+endif
+
+if (LIB_CEREBELLUM_STEPPER_NUM = 3)
+        menu "Channel 3 configuration"
+                comment "All pins describe as GPxy (x - port letter, y-pin number)"
+                comment "Example: for PB2 write GPB2"
+
+                config LIB_CEREBELLUM_STEPPER_STEP_3
+                        string "STEP pin"
+
+                config LIB_CEREBELLUM_STEPPER_DIR_3
+                        string "DIR pin"
+
+                config LIB_CEREBELLUM_STEPPER_RESOL_3
+                        int "Resolution"
+
+                config LIB_CEREBELLUM_STEPPER_DIAMETER_3
+                        int "Wheel diameter"
+
+        endmenu
+endif
+
+comment ""
+
+endif
+
+if !CONTRIB_CEREBELLUM_BOARD_CUSTOM
+        comment "All is configured for your board"
+endif
+
+menu "Fine tuning"
+
+        choice
+                prompt "Force timer to use"
+
+                config LIB_CEREBELLUM_STEPPER_TD
+                        bool "Default"
+
+                config LIB_CEREBELLUM_STEPPER_T0
+                        bool "Timer0"
+
+                config LIB_CEREBELLUM_STEPPER_T1
+                        bool "Timer1"
+
+                config LIB_CEREBELLUM_STEPPER_T2
+                        bool "Timer2"
+
+                config LIB_CEREBELLUM_STEPPER_T3
+                        bool "Timer3"
+
+        endchoice
+
+        config LIB_CEREBELLUM_STEPPER_VALTABLE
+                bool "Use delay values table for fast speed-setting"
+                default y
+                help
+                        This feature requires about 202 bytes of RAM, but things
+                        will work faster
+
+endmenu
+

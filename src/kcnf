@@ -1,8 +1,8 @@
-menuconfig CONTRIB_CEREBELLUM
+menuconfig LIB_CEREBELLUM
         bool "Cerebellum robotics library"
         depends on ARCH_AVR || ARCH_ARM
 
-if CONTRIB_CEREBELLUM
+if LIB_CEREBELLUM
 
 config CONTRIB_CEREBELLUM_DEBUG
         bool "Enable debugging output (by printk)"
