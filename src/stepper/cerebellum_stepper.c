@@ -11,31 +11,6 @@
 
 static volatile struct stepper_motors_s steppers[CONFIG_LIB_CEREBELLUM_STEPPER_NUM];
 
-/* TODO: move it to syscalls */
-void stepper_init()
-{
-        /* Configure timer */
-        //_stepper_syscall_init_timer();
-        TCCR1A = (1<<WGM10);
-        TCCR1B = (1<<WGM12) | (1<<CS10);
-        TIMSK1 = (1<<TOIE1);
-        
-        /* Configure GPIO */
-#if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 1
-        GPIO_INIT_OUT(CONFIG_LIB_CEREBELLUM_STEPPER_ENABLE);
-        GPIO_INIT_OUT(CONFIG_LIB_CEREBELLUM_STEPPER_STEP_1);
-        GPIO_INIT_OUT(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_1);
-#endif
-#if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 2
-        GPIO_INIT_OUT(CONFIG_LIB_CEREBELLUM_STEPPER_STEP_2);
-        GPIO_INIT_OUT(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_2);
-#endif
-#if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 3
-        GPIO_INIT_OUT(CONFIG_LIB_CEREBELLUM_STEPPER_STEP_3);
-        GPIO_INIT_OUT(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_3);
-#endif
-}
-
 void stepper_enable(void)
 {
 #ifdef CONFIG_LIB_CEREBELLUM_STEPPER_INV
@@ -61,15 +36,27 @@ void stepper_set_dir(motor_t motor, motor_dir_t dir)
         
 #if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 1
         if (motor == 0)
+                #ifdef CONFIG_LIV_CEREBELLUM_STEPPER_DIR_INV_1
                 dir == FORWARD ? GPIO_WRITE_LOW(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_1) : GPIO_WRITE_HIGH(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_1);
+                #else
+                dir == BACKWARD ? GPIO_WRITE_LOW(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_1) : GPIO_WRITE_HIGH(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_1);
+                #endif
 #endif
 #if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 2
         else if (motor == 1) 
+                #ifdef CONFIG_LIV_CEREBELLUM_STEPPER_DIR_INV_2
                 dir == FORWARD ? GPIO_WRITE_LOW(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_2) : GPIO_WRITE_HIGH(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_2);
+                #else
+                dir == BACKWARD ? GPIO_WRITE_LOW(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_2) : GPIO_WRITE_HIGH(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_2);
+                #endif
 #endif
 #if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 3
         else if (motor == 2) 
+                #ifdef CONFIG_LIV_CEREBELLUM_STEPPER_DIR_INV_3
                 dir == FORWARD ? GPIO_WRITE_LOW(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_3) : GPIO_WRITE_HIGH(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_3);
+                #else
+                dir == BACKWARD ? GPIO_WRITE_LOW(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_3) : GPIO_WRITE_HIGH(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_3);
+                #endif
 #endif
         
         steppers[motor].dir = dir == FORWARD ? 1 : -1;
@@ -113,7 +100,7 @@ void stepper_set_real_speed(motor_t motor, uint16_t val)
         stepper_set_delay(motor, val);
 }
 
-void stepper_set_speed(motor_t motor, motor_speed_t speed)
+void stepper_set_speed(motor_t motor, motor_val_t speed)
 {
         if (speed < 0)
                 speed = -speed;

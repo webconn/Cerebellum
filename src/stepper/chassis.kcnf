@@ -1,0 +1,23 @@
+choice
+        prompt "Chassis configuration scheme"
+
+        config LIB_CEREBELLUM_CHASSIS_STEPPER_SCHEME_CLASSIC
+                bool "Classic (1+1)"
+endchoice
+
+config LIB_CEREBELLUM_CHASSIS_STEPPER_LEFT
+        int "Left motor index"
+        depends on LIB_CEREBELLUM_CHASSIS_STEPPER_SCHEME_CLASSIC
+        default 0
+        help
+                Motor index is a number which you can find in your Stepper
+                driver configuration.
+
+config LIB_CEREBELLUM_CHASSIS_STEPPER_RIGHT
+        int "Right motor index"
+        depends on LIB_CEREBELLUM_CHASSIS_STEPPER_SCHEME_CLASSIC
+        default 1
+        help
+                Motor index is a number which you can find in your Stepper
+                driver configuration.
+

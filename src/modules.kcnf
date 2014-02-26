@@ -13,3 +13,32 @@ menuconfig LIB_CEREBELLUM_MOD_STEPPER
 if LIB_CEREBELLUM_MOD_STEPPER
         source antares/src/lib/contrib/cerebellum/stepper/kcnf
 endif
+
+menuconfig LIB_CEREBELLUM_MOD_CHASSIS
+        bool "Chassis base controller"
+
+if LIB_CEREBELLUM_MOD_CHASSIS
+        choice
+                prompt "Chassis driver"
+
+                config LIB_CEREBELLUM_MOD_CHASSIS_STEPPER
+                        bool "Stepper"
+                        depends on LIB_CEREBELLUM_MOD_STEPPER
+
+                config LIB_CEREBELLUM_MOD_CHASSIS_DCMOTORS
+                        bool "DC motors"
+                        depends on LIB_CEREBELLUM_MOD_DCMOTORS
+
+                config LIB_CEREBELLUM_MOD_CHASSIS_NONE
+                        bool "None"
+                        depends on !LIB_CEREBELLUM_MOD_STEPPER && !LIB_CEREBELLUM_MOD_DCMOTORS
+        endchoice
+
+        if LIB_CEREBELLUM_MOD_CHASSIS_STEPPER
+                source antares/src/lib/contrib/cerebellum/stepper/chassis.kcnf
+        endif
+
+        if LIB_CEREBELLUM_MOD_CHASSIS_NONE
+                comment "Please add some engines to your Cerebellum to create chassis"
+        endif
+endif

@@ -11,5 +11,4 @@ config CONTRIB_CEREBELLUM_DEBUG
 source antares/src/lib/contrib/cerebellum/boards.kcnf
 source antares/src/lib/contrib/cerebellum/modules.kcnf
 
-
 endif

@@ -49,7 +49,7 @@ typedef unsigned int motor_t;
 
 #define CEREBELLUM_MAX_SPEED 127
 #define CEREBELLUM_MIN_SPEED -127
-typedef int16_t motor_val_t;
+typedef int8_t motor_val_t;
 
 #else
 
