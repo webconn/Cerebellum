@@ -25,6 +25,12 @@
 #define GPIO_WRITE_HIGH_RAW(port, ddr, pin, num) (port |= (1<<num))
 #define GPIO_WRITE_LOW_RAW(port, ddr, pin, num) (port &= ~(1<<num))
 
+#ifdef __AVR_ATtiny2313__
+#define GPIO_TOGGLE_RAW(port, ddr, pin, num) (pin |= (1<<num))
+#else
+#define GPIO_TOGGLE_RAW(port, ddr, pin, num) (port ^= (1<<num))
+#endif
+
 /**
  * Short macroses
  */
@@ -35,5 +41,6 @@
 #define GPIO_READ(gpio) GPIO_READ_RAW(gpio)
 #define GPIO_WRITE_HIGH(gpio) GPIO_WRITE_HIGH_RAW(gpio)
 #define GPIO_WRITE_LOW(gpio) GPIO_WRITE_LOW_RAW(gpio)
+#define GPIO_TOGGLE(gpio) GPIO_TOGGLE_RAW(gpio)
 
 #endif
