@@ -36,7 +36,7 @@ void stepper_set_dir(motor_t motor, motor_dir_t dir)
         
 #if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 1
         if (motor == 0)
-                #ifdef CONFIG_LIV_CEREBELLUM_STEPPER_DIR_INV_1
+                #ifdef CONFIG_LIB_CEREBELLUM_STEPPER_DIR_INV_1
                 dir == FORWARD ? GPIO_WRITE_LOW(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_1) : GPIO_WRITE_HIGH(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_1);
                 #else
                 dir == BACKWARD ? GPIO_WRITE_LOW(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_1) : GPIO_WRITE_HIGH(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_1);
@@ -44,7 +44,7 @@ void stepper_set_dir(motor_t motor, motor_dir_t dir)
 #endif
 #if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 2
         else if (motor == 1) 
-                #ifdef CONFIG_LIV_CEREBELLUM_STEPPER_DIR_INV_2
+                #ifdef CONFIG_LIB_CEREBELLUM_STEPPER_DIR_INV_2
                 dir == FORWARD ? GPIO_WRITE_LOW(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_2) : GPIO_WRITE_HIGH(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_2);
                 #else
                 dir == BACKWARD ? GPIO_WRITE_LOW(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_2) : GPIO_WRITE_HIGH(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_2);
@@ -52,7 +52,7 @@ void stepper_set_dir(motor_t motor, motor_dir_t dir)
 #endif
 #if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 3
         else if (motor == 2) 
-                #ifdef CONFIG_LIV_CEREBELLUM_STEPPER_DIR_INV_3
+                #ifdef CONFIG_LIB_CEREBELLUM_STEPPER_DIR_INV_3
                 dir == FORWARD ? GPIO_WRITE_LOW(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_3) : GPIO_WRITE_HIGH(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_3);
                 #else
                 dir == BACKWARD ? GPIO_WRITE_LOW(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_3) : GPIO_WRITE_HIGH(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_3);
@@ -157,40 +157,24 @@ void stepper_reset_path(motor_t motor)
 static inline void toggle(motor_t motor)
 {
         if (steppers[motor].base_delay) {
-                if (steppers[motor].state) {
-                        #if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 1
-                                if (motor == 0)
-                                        GPIO_WRITE_HIGH(CONFIG_LIB_CEREBELLUM_STEPPER_STEP_1);
-                        #endif
-                        #if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 2
-                                else if (motor == 1) 
-                                        GPIO_WRITE_HIGH(CONFIG_LIB_CEREBELLUM_STEPPER_STEP_2);
-                        #endif
-                        #if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 3
-                                else if (motor == 2) 
-                                        GPIO_WRITE_HIGH(CONFIG_LIB_CEREBELLUM_STEPPER_STEP_3);
-                        #endif
-                } else {
-                        #if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 1
-                                if (motor == 0)
-                                        GPIO_WRITE_LOW(CONFIG_LIB_CEREBELLUM_STEPPER_STEP_1);
-                        #endif
-                        #if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 2
-                                else if (motor == 1) 
-                                        GPIO_WRITE_LOW(CONFIG_LIB_CEREBELLUM_STEPPER_STEP_2);
-                        #endif
-                        #if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 3
-                                else if (motor == 2) 
-                                        GPIO_WRITE_LOW(CONFIG_LIB_CEREBELLUM_STEPPER_STEP_3);
-                        #endif
-                }
-                
+                #if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 1
+                        if (motor == 0)
+                                GPIO_TOGGLE(CONFIG_LIB_CEREBELLUM_STEPPER_STEP_1);
+                #endif
+                #if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 2
+                        else if (motor == 1) 
+                                GPIO_TOGGLE(CONFIG_LIB_CEREBELLUM_STEPPER_STEP_2);
+                #endif
+                #if CONFIG_LIB_CEREBELLUM_STEPPER_NUM >= 3
+                        else if (motor == 2) 
+                                GPIO_TOGGLE(CONFIG_LIB_CEREBELLUM_STEPPER_STEP_3);
+                #endif
+        
                 steppers[motor].path += steppers[motor].dir;
-                steppers[motor].state = !(steppers[motor].state);
         }
 }
 
-static inline void timer_interrupt()
+void stepper_interrupt()
 {
         for (uint8_t i=0; i<CONFIG_LIB_CEREBELLUM_STEPPER_NUM; i++) {
                 if (steppers[i].delay != 0) {
@@ -202,9 +186,3 @@ static inline void timer_interrupt()
         }
 }
 
-ISR(TIMER1_OVF_vect)
-{
-        GPIO_WRITE_LOW(GPB0);
-        timer_interrupt();
-        GPIO_WRITE_HIGH(GPB0);
-}

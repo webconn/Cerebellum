@@ -1,0 +1,20 @@
+choice
+        prompt "Force timer to use"
+
+        config LIB_CEREBELLUM_STEPPER_TIMER_DEFAULT
+                bool "Default"
+
+        config LIB_CEREBELLUM_STEPPER_TIMER_0
+                bool "Timer/Counter 0"
+
+        config LIB_CEREBELLUM_STEPPER_TIMER_1
+                bool "Timer/Counter 1"
+
+        config LIB_CEREBELLUM_STEPPER_TIMER_2
+                bool "Timer/Counter 2"
+
+        config LIB_CEREBELLUM_STEPPER_TIMER_3
+                bool "Timer/Counter 3"
+
+endchoice
+

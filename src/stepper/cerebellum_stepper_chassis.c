@@ -59,9 +59,10 @@ void chassis_move(motor_speed_t left, motor_speed_t right, motor_speed_t acc, mo
 
 uint8_t chassis_busy(void)
 {
-        ANTARES_ATOMIC_RESTORE
+        register uint8_t st;
+        ANTARES_ATOMIC_BLOCK()
         {
-                uint8_t st = state;
+                st = state;
         }
         return st;
 }
@@ -141,7 +142,7 @@ static inline void process_move(void)
         }
 }
 
-void chassis_process(void)
+void chassis_interrupt(void)
 {
         /* Write values */
         if (!state) { /* chassis must stay at place */

@@ -26,10 +26,12 @@ void stepper_set_speed(motor_t motor, motor_val_t val);
 void stepper_set_real_speed(motor_t motor, uint16_t speed);
 void stepper_write(motor_t motor, motor_val_t val);
 
+void stepper_interrupt(void); /* service function for timer interrupt */
+
 /**
  * Motor feedback interface
  */
-motor_speed_t stepper_get_speed(motor_t motor);
+//motor_speed_t stepper_get_speed(motor_t motor);
 motor_path_t stepper_get_path(motor_t motor);
 void stepper_reset_path(motor_t motor);
 

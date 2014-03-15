@@ -7,7 +7,7 @@ void chassis_write(motor_speed_t left, motor_speed_t right);
 void chassis_move(motor_speed_t left, motor_speed_t right, motor_speed_t acc, motor_speed_t acc_div, motor_path_t path);
 void chassis_stop(void);
 
-void chassis_process(void); /* function to call in timer interrupt or task manager */
+void chassis_interrupt(void); /* function to call in timer interrupt or task manager */
 
 void chassis_reset(void);
 uint8_t chassis_busy(void);

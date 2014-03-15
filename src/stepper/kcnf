@@ -92,32 +92,17 @@ endif
 
 menu "Fine tuning"
 
-        choice
-                prompt "Force timer to use"
-
-                config LIB_CEREBELLUM_STEPPER_TD
-                        bool "Default"
-
-                config LIB_CEREBELLUM_STEPPER_T0
-                        bool "Timer0"
-
-                config LIB_CEREBELLUM_STEPPER_T1
-                        bool "Timer1"
-
-                config LIB_CEREBELLUM_STEPPER_T2
-                        bool "Timer2"
-
-                config LIB_CEREBELLUM_STEPPER_T3
-                        bool "Timer3"
-
-        endchoice
-
         config LIB_CEREBELLUM_STEPPER_VALTABLE
                 bool "Use delay values table for fast speed-setting"
                 default y
                 help
                         This feature requires about 202 bytes of RAM, but things
                         will work faster
+
+        if ARCH_AVR
+                comment "Arch-dependent configuration"
+                source antares/src/lib/contrib/cerebellum/stepper/arch_avr.kcnf
+        endif
 
 endmenu
 
