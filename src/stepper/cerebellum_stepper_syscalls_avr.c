@@ -2,9 +2,15 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+#include <arch/antares.h>
+
 /* TODO: configure feature */
 
+#ifdef CONFIG_ANTARES_STARTUP
+ANTARES_INIT_LOW(stepper_init)
+#else
 void stepper_init()
+#endif
 {
         /* Configure timer */
 #if defined(CONFIG_MCU_ATMEGA32U4)

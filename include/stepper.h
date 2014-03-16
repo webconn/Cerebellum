@@ -17,7 +17,10 @@ struct stepper_motors_s {
  * Motor driving interface
  */
 
+#ifndef CONFIG_ANTARES_STARTUP
 void stepper_init(void);
+#endif
+
 void stepper_enable(void);
 void stepper_disable(void);
 void stepper_set_dir(motor_t motor, motor_dir_t dir);
