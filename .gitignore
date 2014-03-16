@@ -4,3 +4,6 @@
 
 # Temp files of Vim
 .*.swp
+
+# Tags file - for programmer
+tags
