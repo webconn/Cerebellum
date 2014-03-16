@@ -6,6 +6,7 @@ if LIB_CEREBELLUM
 
 config CONTRIB_CEREBELLUM_DEBUG
         bool "Enable debugging output (by printk)"
+        depends on LIB_PRINTK
         default y
 
 source antares/src/lib/contrib/cerebellum/boards.kcnf
