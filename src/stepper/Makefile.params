@@ -1,0 +1,15 @@
+# This Makefile need to unquote some params from kcnf to
+# import them in the C code.
+
+# Example of unquoting param CONFIG_MY_PARAM_Q
+# to import it without quotes as CONFIG_MY_PARAM:
+#
+# cflags-y+=-DCONFIG_MY_PARAM=$(call unquote,$(CONFIG_MY_PARAM_Q))
+
+cflags-y+=-DCONFIG_LIB_CEREBELLUM_STEPPER_ENABLE=$(call unquote,$(CONFIG_LIB_CEREBELLUM_STEPPER_ENABLE_Q))
+cflags-y+=-DCONFIG_LIB_CEREBELLUM_STEPPER_STEP_1=$(call unquote,$(CONFIG_LIB_CEREBELLUM_STEPPER_STEP_1_Q))
+cflags-y+=-DCONFIG_LIB_CEREBELLUM_STEPPER_DIR_1=$(call unquote,$(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_1_Q))
+cflags-y+=-DCONFIG_LIB_CEREBELLUM_STEPPER_STEP_2=$(call unquote,$(CONFIG_LIB_CEREBELLUM_STEPPER_STEP_2_Q))
+cflags-y+=-DCONFIG_LIB_CEREBELLUM_STEPPER_DIR_2=$(call unquote,$(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_2_Q))
+cflags-y+=-DCONFIG_LIB_CEREBELLUM_STEPPER_STEP_3=$(call unquote,$(CONFIG_LIB_CEREBELLUM_STEPPER_STEP_3_Q))
+cflags-y+=-DCONFIG_LIB_CEREBELLUM_STEPPER_DIR_3=$(call unquote,$(CONFIG_LIB_CEREBELLUM_STEPPER_DIR_3_Q))
