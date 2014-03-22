@@ -1,10 +1,17 @@
+config LIB_CEREBELLUM_BOARD_USE_STEPPER
+        bool
+
 choice
         prompt "Development board"
 
-        config CONTRIB_CEREBELLUM_BOARD_CEREMOTOR_F1
+        config LIB_CEREBELLUM_BOARD_CUSTOM
+                bool "Custom"
+
+        config LIB_CEREBELLUM_BOARD_CEREMOTOR_F1
                 bool "CereMotor-F1"
 
-        config CONTRIB_CEREBELLUM_BOARD_STEPPER_U4
+        config LIB_CEREBELLUM_BOARD_STEPPER_U4
                 bool "Stepper-U4"
+                select LIB_CEREBELLUM_BOARD_USE_STEPPER
 
 endchoice

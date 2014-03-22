@@ -1,3 +1,8 @@
+/**
+ * @file include/gpio.h
+ * @brief GPIO abstraction layer
+ */
+
 #ifndef ANTARES_LIB_CONTRIB_CEREBELLUM_GPIO_H
 #define ANTARES_LIB_CONTRIB_CEREBELLUM_GPIO_H
 

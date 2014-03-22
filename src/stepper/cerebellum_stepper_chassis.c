@@ -1,3 +1,9 @@
+/**
+ * @file stepper/cerebellum_stepper_chassis.c
+ * @brief Standart chassis interface implementation for Stepper
+ * @author Nikita 'webconn' Maslov
+ */
+
 #include <lib/cerebellum/chassis.h>
 #include <lib/cerebellum/stepper.h>
 #include <arch/antares.h>
@@ -21,6 +27,15 @@ static enum {
         STATE_STATIC
 } state; 
 
+/**
+ * @brief Write combined speed values to chassis (for each motor)
+ *
+ * Write signed speed values into each Stepper channel (using 
+ * stepper_set_speed() function).
+ * 
+ * @param[in] left Value for left motor
+ * @param[in] right Value for right motor
+ */
 void chassis_write(motor_speed_t left, motor_speed_t right)
 {
         /* TODO: insert convertion from units to mm/s or equal */
@@ -29,9 +44,24 @@ void chassis_write(motor_speed_t left, motor_speed_t right)
         v_right = right;
 }
 
+/**
+ * @brief Setup smooth movement of chassis for defined path value
+ *
+ * Smooth movement is a movement with smoooth acceleration and braking.
+ *
+ * Acceleration value is set as a regular number (with separated denominator and divider). In
+ * Chassis implementation, divider changes from 0 to maximum of motor_speed_t type. (0 means no divider, or
+ * 1; look at this fact as real divider just adds 1 to its value).
+ *
+ * @param[in] left left Required left motor speed
+ * @param[in] right Required right motor speed
+ * @param[in] acc Denominator of acceleration value
+ * @param[in] acc_div Divider of acceleraiotn value (from 0 to max of motor_speed_t)
+ * @param[in] path Length of movement (signed! according to movement direction!)
+ */
 void chassis_move(motor_speed_t left, motor_speed_t right, motor_speed_t acc, motor_speed_t acc_div, motor_path_t path)
 {
-        /* TODO: convertions and acceleration */
+        /** @todo Fix path to be unsigned and calculate personal acceleration for left and right channels */
         chassis_reset();
 
         a_left = acc;
@@ -52,7 +82,7 @@ void chassis_move(motor_speed_t left, motor_speed_t right, motor_speed_t acc, mo
         min_right = 1;
 
         v_path = path;
-        h_path = path / 2;
+        h_path = path >> 1;
 
         state = STATE_START;
 }
