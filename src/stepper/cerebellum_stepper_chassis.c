@@ -16,7 +16,10 @@ static volatile motor_path_t p_left, p_right;
 static volatile motor_path_t a_path;
 static volatile motor_val_t a_left, a_right, a_div, r_left, r_right, min_left, min_right; /* r_left, r_right - required values; */
 static volatile motor_val_t a_dval;
-static volatile motor_path_t v_path, h_path;
+static volatile motor_path_t v_path, h_path, s_path;
+
+typedef uint8_t (*interrupt_t)(void);
+static volatile interrupt_t move_interrupt = NULL;
 
 static enum {
         STATE_STOP = 0,
@@ -24,7 +27,9 @@ static enum {
         STATE_PROCESS,
         STATE_BRAKE,
         STATE_PRESTOP,
-        STATE_STATIC
+        STATE_STATIC,
+        STATE_PREINTERRUPT,
+        STATE_INTERRUPT
 } state; 
 
 /**
@@ -78,13 +83,19 @@ void chassis_move(motor_speed_t left, motor_speed_t right, motor_speed_t acc, mo
         r_left = left;
         r_right = right;
 
-        min_left = 1;
-        min_right = 1;
+        min_left = 5;
+        min_right = 5;
 
         v_path = path;
         h_path = path >> 1;
+        s_path = 0;
 
         state = STATE_START;
+}
+
+void chassis_set_interrupt(uint8_t (*func)(void))
+{
+        move_interrupt = func;
 }
 
 uint8_t chassis_busy(void)
@@ -134,22 +145,29 @@ static inline void process_move(void)
                         state = STATE_PROCESS;
                         v_left = r_left;
                         v_right = r_right;
-                        a_path = path; /* save acceleration path */
+                        a_path = path - s_path; /* save acceleration path */
                 }
 
                 if (path >= h_path) {
                         state = STATE_BRAKE;
-                        a_path = path;
+                        a_path = path - s_path;
                         a_dval = 0;
                 }
+
+                if (move_interrupt && move_interrupt()) 
+                        state = STATE_PREINTERRUPT;
+
         } else if (state == STATE_PROCESS) { /* process */
                 //v_left = r_left;
                 //v_right = r_right;
 
-                if (v_path - a_path <= path) {
+                if (v_path - a_path <= path)
                         state = STATE_BRAKE;
-                }
-        } else if (state == STATE_BRAKE) {
+
+                if (move_interrupt && move_interrupt())
+                        state = STATE_PREINTERRUPT;
+
+        } else if (state == STATE_BRAKE || state == STATE_PREINTERRUPT) {
                 a_dval++;
                 if (a_dval == a_div) {
                         v_left -= a_left;
@@ -161,13 +179,33 @@ static inline void process_move(void)
                         v_left = 0;
                         v_right = 0;
                 }
-                if (abs(v_left) <= abs(min_left) || abs(v_right) <= abs(min_right))
-                        state = STATE_PRESTOP;
+                if (abs(v_left) <= abs(min_left) || abs(v_right) <= abs(min_right)) {
+                        if (state == STATE_BRAKE)
+                                state = STATE_PRESTOP;
+                        else /* if (state == STATE_PREINTERRUPT) */
+                                state = STATE_INTERRUPT;
+                }
         } else if (state == STATE_PRESTOP) {
+                v_left = min_left;
+                v_right = min_right;
                 if (path >= v_path) {
                         state = STATE_STOP;
                         v_left = 0;
                         v_right = 0;
+                }
+        } else if (state == STATE_INTERRUPT) {
+                v_left = 0;
+                v_right = 0;
+
+                if (move_interrupt && !move_interrupt()) {
+                        h_path = (v_path - path) >> 1;
+                        s_path = path;
+                        if (h_path > 0) {
+                                h_path += path;
+                                state = STATE_START;
+                        }
+                        else
+                                state = STATE_STOP;
                 }
         }
 }
