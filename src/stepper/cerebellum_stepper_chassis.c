@@ -74,17 +74,21 @@ void chassis_move(motor_speed_t left, motor_speed_t right, motor_speed_t acc, mo
         a_div = acc_div;
         a_dval = 0;
 
-        if (left < 0)
-                a_left = -a_left;
+        min_left = 5;
+        min_right = 5;
 
-        if (right < 0)
+        if (left < 0) {
+                a_left = -a_left;
+                min_left = -min_left;
+        }
+
+        if (right < 0) {
                 a_right = -a_right;
+                min_right = -min_right;
+        }
 
         r_left = left;
         r_right = right;
-
-        min_left = 5;
-        min_right = 5;
 
         v_path = path;
         h_path = path >> 1;
