@@ -53,7 +53,5 @@ ISR(TIMER2_OVF_vect)
 ISR(TIMER3_OVF_vect)
 #endif
 {
-        GPIO_WRITE_LOW(GPB0);
         stepper_interrupt();
-        GPIO_WRITE_HIGH(GPB0);
 }
