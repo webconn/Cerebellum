@@ -21,7 +21,7 @@ static volatile motor_path_t v_path, h_path, s_path;
 typedef uint8_t (*interrupt_t)(void);
 static volatile interrupt_t move_interrupt = NULL;
 
-static enum {
+static volatile enum {
         STATE_STOP = 0,
         STATE_START,
         STATE_PROCESS,
@@ -29,8 +29,10 @@ static enum {
         STATE_PRESTOP,
         STATE_STATIC,
         STATE_PREINTERRUPT,
-        STATE_INTERRUPT
+        STATE_INTERRUPT,
+        STATE_RESUME
 } state; 
+static volatile uint8_t fast_resume = 0;
 
 /**
  * @brief Write combined speed values to chassis (for each motor)
@@ -128,6 +130,24 @@ void chassis_stop(void)
         state = STATE_STOP;
 }
 
+void chassis_pause(void)
+{
+        if (state == STATE_START || state == STATE_PROCESS) {
+                state = STATE_PREINTERRUPT;
+        } else if (state == STATE_PREINTERRUPT && fast_resume) {
+                fast_resume = 0;
+        }
+}
+
+void chassis_resume(void)
+{
+        if (state == STATE_INTERRUPT) {
+                state = STATE_RESUME;
+        } else if (state == STATE_PREINTERRUPT) {
+                fast_resume = 1;
+        }
+}
+
 #define abs(a) ((a) < 0 ? -(a) : (a))
 
 static inline void process_move(void)
@@ -157,20 +177,12 @@ static inline void process_move(void)
                         a_path = path - s_path;
                         a_dval = 0;
                 }
-
-                if (move_interrupt && move_interrupt()) 
-                        state = STATE_PREINTERRUPT;
-
         } else if (state == STATE_PROCESS) { /* process */
                 //v_left = r_left;
                 //v_right = r_right;
 
                 if (v_path - a_path <= path)
                         state = STATE_BRAKE;
-
-                if (move_interrupt && move_interrupt())
-                        state = STATE_PREINTERRUPT;
-
         } else if (state == STATE_BRAKE || state == STATE_PREINTERRUPT) {
                 a_dval++;
                 if (a_dval == a_div) {
@@ -201,15 +213,18 @@ static inline void process_move(void)
                 v_left = 0;
                 v_right = 0;
 
-                if (move_interrupt && !move_interrupt()) {
-                        h_path = (v_path - path) >> 1;
-                        s_path = path;
-                        if (h_path > 0) {
-                                h_path += path;
-                                state = STATE_START;
-                        }
-                        else
-                                state = STATE_STOP;
+                if (fast_resume) {
+                        state = STATE_RESUME;
+                        fast_resume = 0;
+                }
+        } else if (state == STATE_RESUME) {
+                h_path = (v_path - path) >> 1;
+                s_path = path;
+                if (h_path > 0) {
+                        h_path += path;
+                        state = STATE_START;
+                } else { /* critical situation, I cannot imagine it */
+                        state = STATE_STOP;
                 }
         }
 }
