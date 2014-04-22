@@ -8,6 +8,7 @@ void chassis_move(motor_speed_t left, motor_speed_t right, motor_speed_t acc, mo
 void chassis_stop(void);
 void chassis_pause(void);
 void chassis_resume(void);
+void chassis_setup_ebrake(motor_speed_t left, motor_speed_t right);
 
 void chassis_interrupt(void); /* function to call in timer interrupt or task manager */
 

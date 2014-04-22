@@ -17,9 +17,7 @@ static volatile motor_path_t a_path;
 static volatile motor_val_t a_left, a_right, a_div, r_left, r_right, min_left, min_right; /* r_left, r_right - required values; */
 static volatile motor_val_t a_dval;
 static volatile motor_path_t v_path, h_path, s_path;
-
-typedef uint8_t (*interrupt_t)(void);
-static volatile interrupt_t move_interrupt = NULL;
+static volatile motor_val_t b_left = 1, b_right = 1, b_div = 0, bl_left, bl_right, bl_div;
 
 static volatile enum {
         STATE_STOP = 0,
@@ -99,11 +97,6 @@ void chassis_move(motor_speed_t left, motor_speed_t right, motor_speed_t acc, mo
         state = STATE_START;
 }
 
-void chassis_set_interrupt(uint8_t (*func)(void))
-{
-        move_interrupt = func;
-}
-
 uint8_t chassis_busy(void)
 {
         register uint8_t st;
@@ -130,11 +123,48 @@ void chassis_stop(void)
         state = STATE_STOP;
 }
 
+void chassis_setup_ebrake(motor_speed_t acc_num, motor_speed_t acc_denom)
+{
+        b_left = acc_num;
+        b_right = acc_num;
+        b_div = acc_denom;
+}
+
 void chassis_pause(void)
 {
         if (state == STATE_START || state == STATE_PROCESS) {
+                bl_left = a_left;
+                bl_right = a_right;
+                bl_div = a_div;
+
+                if (a_left < 0)
+                        a_left = -b_left;
+                else
+                        a_left = b_left;
+                
+                if (a_right < 0)
+                        a_right = -b_right;
+                else
+                        a_right = b_right;
+
+                a_div = b_div;
                 state = STATE_PREINTERRUPT;
         } else if (state == STATE_PREINTERRUPT && fast_resume) {
+                bl_left = a_left;
+                bl_right = a_right;
+                bl_div = a_div;
+                
+                if (a_left < 0)
+                        a_left = -b_left;
+                else
+                        a_left = b_left;
+                
+                if (a_right < 0)
+                        a_right = -b_right;
+                else
+                        a_right = b_right;
+
+                a_div = b_div;
                 fast_resume = 0;
         }
 }
@@ -142,8 +172,14 @@ void chassis_pause(void)
 void chassis_resume(void)
 {
         if (state == STATE_INTERRUPT) {
+                a_left = bl_left;
+                a_right = bl_right;
+                a_div = bl_div;
                 state = STATE_RESUME;
         } else if (state == STATE_PREINTERRUPT) {
+                a_left = bl_left;
+                a_right = bl_right;
+                a_div = bl_div;
                 fast_resume = 1;
         }
 }
@@ -159,7 +195,7 @@ static inline void process_move(void)
 
         if (state == STATE_START) { /* robot starts */
                 a_dval++;
-                if (a_dval == a_div) {
+                if (a_dval >= a_div) {
                         v_left += a_left;
                         v_right += a_right;
                         a_dval = 0;
@@ -185,7 +221,7 @@ static inline void process_move(void)
                         state = STATE_BRAKE;
         } else if (state == STATE_BRAKE || state == STATE_PREINTERRUPT) {
                 a_dval++;
-                if (a_dval == a_div) {
+                if (a_dval >= a_div) {
                         v_left -= a_left;
                         v_right -= a_right;
                         a_dval = 0;
