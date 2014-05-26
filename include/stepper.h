@@ -28,7 +28,7 @@ void stepper_write(motor_t motor, motor_val_t val);
 void stepper_interrupt(void); /* service function for timer interrupt */
 
 /**
- * @addtogroup Motor feedback interface
+ * @addtogroup chassis_feedback
  * @{
  */
 //motor_speed_t stepper_get_speed(motor_t motor);
