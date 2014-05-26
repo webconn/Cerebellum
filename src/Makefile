@@ -1,2 +1,4 @@
+subdirs-y+=gpio
 subdirs-$(CONFIG_LIB_CEREBELLUM_MOD_LED)+=led
 subdirs-$(CONFIG_LIB_CEREBELLUM_MOD_STEPPER)+=stepper
+subdirs-$(CONFIG_LIB_CEREBELLUM_MOD_HD44780)+=hd44780
