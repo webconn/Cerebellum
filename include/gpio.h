@@ -45,6 +45,7 @@
  * function, etc.)
  *
  * @example examples/avr/gpio/Blink/src/main.c
+ * @example examples/avr/gpio/DynBlink/src/main.c
  */
 
 #include <stdint.h>
@@ -66,7 +67,7 @@
  */
 struct gpio_pin {
         /** GPIO port name */
-        gpio_port_t port;
+        volatile uint8_t *port;
         /** GPIO pin number */
         arch_uint_t pin;
 };
@@ -92,7 +93,7 @@ typedef enum {
  *
  * @return Nothing to return
  */
-void gpio_init(const struct gpio_pin *pin, gpio_mode_t mode);
+void gpio_init(struct gpio_pin pin, gpio_mode_t mode);
 
 /**
  * @brief Write given value into GPIO pin
@@ -102,7 +103,7 @@ void gpio_init(const struct gpio_pin *pin, gpio_mode_t mode);
  *
  * @return Nothing to return
  */
-void gpio_write(const struct gpio_pin *pin, gpio_state_t state);
+void gpio_write(struct gpio_pin pin, gpio_state_t state);
 
 /**
  * @brief Read the state of GPIO pin
@@ -114,7 +115,7 @@ void gpio_write(const struct gpio_pin *pin, gpio_state_t state);
  * @retval GPIO_LOW if pin level is low (GND)
  * @retval GPIO_HIGH if pin level is high (Vcc)
  */
-gpio_state_t gpio_read(const struct gpio_pin *pin);
+gpio_state_t gpio_read(struct gpio_pin pin);
 
 /**
  * @brief Toggle GPIO pin
@@ -124,7 +125,7 @@ gpio_state_t gpio_read(const struct gpio_pin *pin);
  *
  * @return Nothing to return
  */
-void gpio_toggle(const struct gpio_pin *pin);
+void gpio_toggle(struct gpio_pin pin);
 
 /**
  * @}

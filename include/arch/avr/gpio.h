@@ -69,47 +69,51 @@
  */
 #define GPIO_TOGGLE(gpio) GPIO_TOGGLE_RAW(gpio)
 
+#ifdef PORTA
+/** reference to PORTA, PINA, DDRA */
+#define GPIO_A &PORTA
+#endif
+#ifdef PORTB
+/** reference to PORTB, PINB, DDRB */
+#define GPIO_B &PORTB
+#endif
+#ifdef PORTC
+/** reference to PORTC, PINC, DDRC */
+#define GPIO_C &PORTC
+#endif
+#ifdef PORTD
+/** reference to PORTD, PIND, DDRD */
+#define GPIO_D &PORTD
+#endif
+#ifdef PORTE
+/** reference to PORTE, PINE, DDRE */
+#define GPIO_E &PORTE
+#endif
+#ifdef PORTF
+/** reference to PORTF, PINF, DDRF */
+#define GPIO_F &PORTF
+#endif
+#ifdef PORTG
+/** reference to PORTG, PING, DDRG */
+#define GPIO_G &PORTG
+#endif
+#ifdef PORTH
+/** reference to PORTH, PINH, DDRH */
+#define GPIO_H &PORTH
+#endif
+
+
 /* Arch-specific typedefs (for performance) */
 
 /**
- * @brief GPIO port enum
+ * @brief GPIO port typedef
  *
- * Index of GPIO port for usage in gpio_pin_t structure.
+ * Value which is given by macros GPIO_x (GPIO_A, GPIO_B, ...)
+ * 
+ * In fact, these values are pointers to PORTx register (PIN and DDR calculated with offset)
  */
-typedef enum {
-        /** reference to PORTA, PINA, DDRA */
-        #ifdef PORTA
-        GPIO_A,
-        #endif
-        /** reference to PORTB, PINB, DDRB */
-        #ifdef PORTB
-        GPIO_B,
-        #endif
-        /** reference to PORTC, PINC, DDRC */
-        #ifdef PORTC
-        GPIO_C,
-        #endif
-        /** reference to PORTD, PIND, DDRD */
-        #ifdef PORTD
-        GPIO_D = 3,
-        #endif
-        /** reference to PORTE, PINE, DDRE */
-        #ifdef PORTE
-        GPIO_E = 4,
-        #endif
-        /** reference to PORTF, PINF, DDRF */
-        #ifdef PORTF
-        GPIO_F = 5,
-        #endif
-        /** reference to PORTG, PING, DDRG */
-        #ifdef PORTG
-        GPIO_G = 6,
-        #endif
-        /** reference to PORTH, PINH, DDRH */
-        #ifdef PORTH
-        GPIO_H = 7
-        #endif
-} gpio_port_t;
+typedef volatile uint8_t *gpio_port_t;
+
 
 /**
  * @brief GPIO modes enum
