@@ -46,6 +46,7 @@
  *
  * @example examples/avr/gpio/Blink/src/main.c
  * @example examples/avr/gpio/DynBlink/src/main.c
+ * @example examples/avr/gpio/Button/src/main.c
  */
 
 #include <stdint.h>
