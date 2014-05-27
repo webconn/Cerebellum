@@ -31,6 +31,9 @@
 #define GPIO_TOGGLE_RAW(port, ddr, pin, num) (port ^= (1<<num))
 #endif
 
+#define GPIO_DESCR_RAW(PORT, DDR, PIN, NUM) ((struct gpio_pin) { .port = &(PORT), .pin = (NUM) })
+#define GPIO_INIT_DESCR_RAW(descr, PORT, DDR, PIN, NUM) do { descr.port = &(PORT); descr.pin = (NUM); } while (0)
+
 /* Short macros */
 
 /**
@@ -68,6 +71,17 @@
  * @param GPIO GPIO pin description macro (GPxy)
  */
 #define GPIO_TOGGLE(gpio) GPIO_TOGGLE_RAW(gpio)
+/**
+ * Get GPIO descriptor from macro
+ * @param GPIO GPIO pin descrtipion macro (GPxy)
+ */
+#define GPIO_DESCR(gpio) GPIO_DESCR_RAW(gpio)
+/**
+ * Fill GPIO descriptor structure with given GPIO data
+ * @param descr Name of descriptor structure (already declared)
+ * @param GPIO GPIO pin description macro (GPxy)
+ */
+#define GPIO_INIT_DESCR(descr, gpio) GPIO_INIT_DESCR_RAW(descr, gpio)
 
 #ifdef PORTA
 /** reference to PORTA, PINA, DDRA */
