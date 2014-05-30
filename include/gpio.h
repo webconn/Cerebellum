@@ -55,23 +55,21 @@
 #include "arch/avr/gpio.h"
 #endif
 
-#include "arch/avr/generic.h"
+#ifdef CONFIG_MCU_STM32
+#include "arch/arm-stm32/gpio.h"
+#endif
 
 /**
- * @addtogroup hal_gpio
+ * @defgroup hal_gpio_generic GPIO generic features
+ * @ingroup hal_gpio
+ * @brief These function are mandatory for each implementation of Cerebellum library \
+ *        (you can use it on every arch which is supported by Cerebellum library)
+ */
+
+/**
+ * @addtogroup hal_gpio_generic
  * @{
  */
-
-/**
- * @brief GPIO pin description structure
- * Used in dynamical GPIO abstraction
- */
-struct gpio_pin {
-        /** GPIO port name */
-        volatile uint8_t *port;
-        /** GPIO pin number */
-        arch_uint_t pin;
-};
 
 /**
  * @brief GPIO state typedef
@@ -83,8 +81,6 @@ typedef enum {
         /** High value (set to Vcc) */
         GPIO_HIGH
 } gpio_state_t;
-
-/* GPIO functions implementations */
 
 /**
  * @brief Initialize GPIO pin to run in given mode
@@ -127,6 +123,10 @@ gpio_state_t gpio_read(struct gpio_pin pin);
  * @return Nothing to return
  */
 void gpio_toggle(struct gpio_pin pin);
+
+/**
+ * @}
+ */
 
 /**
  * @}
