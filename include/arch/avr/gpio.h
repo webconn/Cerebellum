@@ -10,9 +10,16 @@
 #include <avr/io.h>
 /* Include list of GPIO expansion */
 #include "gpio_expansion.h"
+#include "generic.h"
 
 /**
- * @addtogroup hal_gpio
+ * @defgroup hal_gpio_avr GPIO AVR implementation
+ * @ingroup hal_gpio
+ * @brief AVR hardware support layer for GPIO HAL
+ */
+
+/**
+ * @addtogroup hal_gpio_avr
  * @{
  */
 
@@ -31,7 +38,7 @@
 #define GPIO_TOGGLE_RAW(port, ddr, pin, num) (port ^= (1<<num))
 #endif
 
-#define GPIO_DESCR_RAW(PORT, DDR, PIN, NUM) ((struct gpio_pin) { .port = &(PORT), .pin = (NUM) })
+#define GPIO_DESCR_RAW(PORT, DDR, PIN, NUM) { .port = &(PORT), .pin = (NUM) }
 #define GPIO_INIT_DESCR_RAW(descr, PORT, DDR, PIN, NUM) do { descr.port = &(PORT); descr.pin = (NUM); } while (0)
 
 /* Short macros */
@@ -41,6 +48,15 @@
  * @param GPIO GPIO pin description macro (GPxy)
  */
 #define GPIO_INIT_OUT(gpio) GPIO_INIT_OUT_RAW(gpio)
+/* Configure selected pin as open-drain output
+ * Unfortunately, AVR doesn't support this feature by hardware,
+ * only with some cheats.
+ *
+ * Well, yeah, this should break down some devices connected to GPIO,
+ * so init this as input and show error
+ */
+/** @todo implement open-drain output mode for AVR */
+#define GPIO_INIT_OUT_OD(gpio) do { GPIO_INIT_IN_RAW(gpio); _Pragma("GCC error \"AVR doesn't support open-drain output GPIO mode; halt compilation\"") } while (0)
 /** 
  * @brief Configure selected GPIO pin as input
  * @param GPIO GPIO pin description macro (GPxy)
@@ -51,6 +67,15 @@
  * @param GPIO GPIO pin description macro (GPxy)
  */
 #define GPIO_INIT_IN_PU(gpio) GPIO_INIT_IN_PU_RAW(gpio)
+/*
+ * Configure selected GPIO pin as input with pull-down
+ * Unfortunately, AVR platform doesn't support this feature,
+ * so GPIO will be initialized as Hi-Z input and the error
+ * will be shown.
+ *
+ * This macro is dummy to save compatibility with some Cerebellum applications
+ */
+#define GPIO_INIT_IN_PD(gpio) do { GPIO_INIT_IN_RAW(gpio); _Pragma("GCC warning \"AVR doesn't support pull-down input GPIO mode; init as Hi-Z input\"") } while (0) 
 /** 
  * Read value from GPIO pin
  * @param GPIO GPIO pin description macro (GPxy)
@@ -76,6 +101,12 @@
  * @param GPIO GPIO pin descrtipion macro (GPxy)
  */
 #define GPIO_DESCR(gpio) GPIO_DESCR_RAW(gpio)
+/**
+ * Get GPIO descriptior from macro as constant
+ * (ex. to use as function argument)
+ * @param GPIO GPIO pin description macro (GPxy)
+ */
+#define GPIO_STR(gpio) ((struct gpio_pin) GPIO_DESCR_RAW(gpio))
 /**
  * Fill GPIO descriptor structure with given GPIO data
  * @param descr Name of descriptor structure (already declared)
@@ -128,7 +159,6 @@
  */
 typedef volatile uint8_t *gpio_port_t;
 
-
 /**
  * @brief GPIO modes enum
  *
@@ -142,6 +172,17 @@ typedef enum {
         /** Input with Pull-up */
         GPIO_MODE_IN_PU
 } gpio_mode_t;
+
+/**
+ * @brief GPIO pin description structure
+ * Used in dynamical GPIO abstraction
+ */
+struct gpio_pin {
+        /** GPIO port name */
+        gpio_port_t port;
+        /** GPIO pin number */
+        arch_uint_t pin;
+};
 
 /**
  * @}
