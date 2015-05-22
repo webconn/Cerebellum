@@ -20,6 +20,7 @@ if [[ -n $ANTARES_INSTALL_DIR ]]; then
         echo "Add kcnf info..."
 
         echo "source antares/src/lib/contrib/cerebellum/kcnf" >> $ANTARES_INSTALL_DIR/src/lib/contrib/kcnf
+        echo "subdirs-\$(CONFIG_LIB_CEREBELLUM)+=cerebellum" >> $ANTARES_INSTALL_DIR/src/lib/contrib/Makefile
 
         echo "Done."
 else
